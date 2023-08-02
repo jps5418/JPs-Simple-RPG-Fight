@@ -1,0 +1,29 @@
+{
+	"dSkills" : [
+		{
+			"skillName" : "Big Punch",
+			"skillDescription" : "It's a big ol punch",
+			"skillCost" : 5
+			"baseDamage" : 5
+		},
+	],
+	"pSSkills" : [
+		{
+			"skillName" : "Happy Thoughts",
+			"skillDescription" : "Think happy thoughts to boost your attack",
+			"skillCost" : 5
+			"affectedStat" : "attack"
+			"statChange" : 5
+		},
+	],
+	"eSSkills" : [
+		{
+			"skillName" : "Mean Words",
+			"skillDescription" : "Throw insults at the enemy to lower their defense",
+			"skillCost" : 5
+			"affectedStat" : "defense"
+			"statChange" : 5
+		},
+	],
+	
+}
