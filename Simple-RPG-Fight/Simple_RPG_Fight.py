@@ -17,20 +17,23 @@ import json
 #buffs will be a list of currently applied buffs and debuffs
 
 class playerProfile:
-    def __init__(name, pClass, hp, sp, attack, defense, magic, speed, luck, dSkills, pSSkills, eSSkills, buffs):
+    def __init__(self, name, pClass, hpMax, spMax, attack, defense, magic, speed, luck, dSkills, pSSkills, eSSkills):
         self.name = name
         self.pClass = pClass
-        self.hp = hp
-        self.sp = sp
+        self.hpMax = hpMax
+        self.hp = hpMax
+        self.spMax = spMax
+        self.sp = spMax
         self.attack = attack
         self.defense = defense
         self.magic = magic
         self.speed = speed
-        self.luch = luck
+        self.luck = luck
         self.dSkills = dSkills
         self.pSSkills = pSSkills
         self.eSSkills = eSSkills
-        self.buffs = buffs
+
+    buffs = []
 
 #class for damaging skills
 #name is the name
@@ -38,7 +41,7 @@ class playerProfile:
 #cost is how much SP it takes to use the skill
 #damage is how much damage the skill does
 class dSkill:
-    def __init__(name, description, cost, damage):
+    def __init__(self, name, description, cost, damage):
         self.name = name
         self.description = description
         self.cost = cost
@@ -51,7 +54,7 @@ class dSkill:
 #affectedStat tells what stat is affected 
 #statChange tells how much that stat changes
 class pSSkill:
-    def __init__(name, description, cost, affectedStat, statChange):
+    def __init__(self, name, description, cost, affectedStat, statChange):
         self.name = name
         self.description = description
         self.cost = cost
@@ -65,7 +68,7 @@ class pSSkill:
 #affectedStat tells what stat is affected 
 #statChange tells how much that stat changes
 class eSSkill:
-    def __init__(name, description, cost, affectedStat, statChange):
+    def __init__(self, name, description, cost, affectedStat, statChange):
         self.name = name
         self.description = description
         self.cost = cost
@@ -77,14 +80,56 @@ class eSSkill:
 #statChange tells how much that stat changes
 #turnLeft tells how many turns the buff is active
 class buff:
-    def __init__(affectedStat, statChange, turnsLeft):
+    def __init__(self, affectedStat, statChange):
         self.affectedStat = affectedStat
         self.statChange = statChange
-        turnsLeft = 3
+    turnsLeft = 3
 
 if __name__=='__main__':
     print('Welcome to my simple turn-based RPG battle system!')
     pName = input('Please enter your name:')
 
+    #open the json file with the player classes
+    f = open('playerClasses.json')
+    playerClasses = json.load(f)
 
 
+    pClass = ""
+    found = False
+
+    while not found:
+        print('Here is a list of available classes')
+        for i in playerClasses['classes']:
+            print(i['className'])
+        pCtemp = input('\nWhich class do you want to play? ')
+        for i in playerClasses['classes']:
+            if pCtemp == i['className']:
+                pClass = i
+                found = True
+                break
+        if not found:
+            print('Please enter a valid input')
+
+    print('You have chosen the ' + pClass['className'] + ' class')
+
+    Player = playerProfile(pName, pClass['className'], pClass['hpMax'], pClass['spMax'], pClass['attack'], pClass['defense'], pClass['magic'], pClass['speed'], pClass['luck'], pClass['dSkills'], pClass['pSSkills'], pClass['eSSkills'])
+
+    print(Player.name)
+    print('Stats:')
+    print('Max HP: ' + str(Player.hpMax))
+    print('Max SP: ' + str(Player.spMax))
+    print('Attack: ' + str(Player.attack))
+    print('Defense: ' + str(Player.defense))
+    print('Magic: ' + str(Player.magic))
+    print('Speed: ' + str(Player.speed))
+    print('Luck: ' + str(Player.luck))
+
+    print('Offensive Skills:')
+    for i in Player.dSkills:
+        print(i)
+
+    print('Support Skills')
+    for i in Player.pSSkills:
+        print(i)
+    for i in Player.eSSkills:
+        print(i)

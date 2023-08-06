@@ -3,8 +3,8 @@
 		{
 			"className" : "average",
 			"classDescription" : "The most average person possible",
-			"hp" : 20,
-			"sp" : 20,
+			"hpMax" : 20,
+			"spMax" : 20,
 			"attack" : 5,
 			"defense" : 5,
 			"magic" : 5,
