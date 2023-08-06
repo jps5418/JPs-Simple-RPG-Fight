@@ -1,6 +1,7 @@
 #John-Phillip Sims
 
 import json
+from random import randint
 
 #Both the player and enemies will have the same stat setup
 #HP - health points
@@ -20,6 +21,24 @@ class playerProfile:
     def __init__(self, name, pClass, hpMax, spMax, attack, defense, magic, speed, luck, dSkills, pSSkills, eSSkills):
         self.name = name
         self.pClass = pClass
+        self.hpMax = hpMax
+        self.hp = hpMax
+        self.spMax = spMax
+        self.sp = spMax
+        self.attack = attack
+        self.defense = defense
+        self.magic = magic
+        self.speed = speed
+        self.luck = luck
+        self.dSkills = dSkills
+        self.pSSkills = pSSkills
+        self.eSSkills = eSSkills
+
+    buffs = []
+
+class enemyProfile:
+    def __init__(self, name, hpMax, spMax, attack, defense, magic, speed, luck, dSkills, pSSkills, eSSkills):
+        self.name = name
         self.hpMax = hpMax
         self.hp = hpMax
         self.spMax = spMax
@@ -85,6 +104,33 @@ class buff:
         self.statChange = statChange
     turnsLeft = 3
 
+
+
+
+def fightingLoop(Player, enemyData, skillsData):
+    while True:
+
+        print('Lets get a random enemy')
+
+        #Pulls a random enemy from the json data
+        randomIndex = randint(0, len(enemyData['enemies'])-1)
+        reTemp = enemyData['enemies'][randomIndex]
+        randomEnemy = enemyProfile(reTemp['enemyName'], reTemp['hpMax'], reTemp['spMax'], reTemp['attack'], reTemp['defense'], reTemp['magic'], reTemp['speed'], reTemp['luck'], reTemp['dSkills'], reTemp['pSSkills'], reTemp['eSSkills'])
+
+        print(randomEnemy.name)
+
+        #Start the fight
+
+
+
+        #ask the player if they want to fight again
+        pInput = input('Do you want to fight again? (Y/N)')
+        if pInput == 'N' or pInput == 'n':
+            break
+
+    print('Fighting is done!')
+
+
 if __name__=='__main__':
     print('Welcome to my simple turn-based RPG battle system!')
     pName = input('Please enter your name:')
@@ -92,6 +138,17 @@ if __name__=='__main__':
     #open the json file with the player classes
     f = open('playerClasses.json')
     playerClasses = json.load(f)
+    f.close()
+
+    #open the file with the enemies
+    f = open('enemies.json')
+    enemyData = json.load(f)
+    f.close()
+
+    #open the file with the skills
+    f = open('skills.json')
+    skillsData = json.load(f)
+    f.close()
 
 
     pClass = ""
@@ -133,3 +190,11 @@ if __name__=='__main__':
         print(i)
     for i in Player.eSSkills:
         print(i)
+
+    pInput = input('Are you ready to start a fight? (Y/N)')
+
+    if pInput == 'Y' or pInput == 'y':
+        print('Start the Game!')
+        fightingLoop(Player, enemyData, skillsData)
+    else:
+        print('Then get out of here!')

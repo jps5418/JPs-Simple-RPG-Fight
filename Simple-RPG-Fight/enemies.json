@@ -1,0 +1,24 @@
+{
+	"enemies" : [
+		{
+			"enemyName" : "Slime",
+			"enemyDescription" : "A rude little slime",
+			"hpMax" : 5,
+			"spMax" : 5,
+			"attack" : 2,
+			"defense" : 2,
+			"magic" : 1,
+			"speed" : 1,
+			"luck" : 1,
+			"dSkills" : [
+				"Big Punch"
+			],
+			"pSSkills" : [
+				"Happy Thoughts"
+			],
+			"eSSkills" : [
+				"Mean Words"
+			]
+		}
+	]
+}
