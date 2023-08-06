@@ -2,6 +2,8 @@
 
 import json
 from random import randint
+import os
+import time
 
 #Both the player and enemies will have the same stat setup
 #HP - health points
@@ -102,10 +104,62 @@ class buff:
     def __init__(self, affectedStat, statChange):
         self.affectedStat = affectedStat
         self.statChange = statChange
-    turnsLeft = 3
+        self.turnsLeft = 3
 
+def clearScreen():
+    if os.name == 'nt':
+        clear = os.system('cls')
+    else:
+        clear = os.system('clear')
 
+def playerTurn(Player, Enemy, skillsData):
+    
 
+    while True:
+        print('Menu')
+        print('\tattack')
+        print('\tguard')
+        print('\tskill')
+        print('\tdie')
+        pInput = input('what do you want to do?')
+
+        if pInput.lower() == 'attack':
+            print('attacking!')
+            time.sleep(1)
+            buffDmg = 0
+            for i in Player.buffs:
+                if i.affectedStat == 'attack':
+                    buffDmg += i.statChange
+            damage = Player.attack + buffDmg - Enemy.defense
+            if(damage > 0):
+                Enemy.hp = Enemy.hp - damage
+                print('Your attack does ' + str(damage) + ' damage!')
+                time.sleep(1)
+                print('' + Enemy.name + ' is now at ' + str(Enemy.hp) + ' HP!')
+            else:
+                print("Your attack does no damage!")
+            
+            time.sleep(3)
+            input('Press enter to continue')
+            break
+        elif pInput.lower() == 'guard':
+            print('guarding!')
+            break
+        elif pInput.lower() == 'skill':
+            print('skills list')
+            break
+        elif pInput.lower() == 'die':
+            print('If you really want that')
+            Player.hp = 0
+            break
+        else:
+            print('Please enter a valid input')
+
+    print('\n\nplayer turn done')
+
+def printFightData(Player, Enemy):
+    print('' + Enemy.name + '\n\tHP: ' + str(Enemy.hp))
+    print('' + Player.name + '\n\tHP: ' + str(Player.hp) + ' / ' + str(Player.hpMax) + '\n\tSP: ' + str(Player.sp) + ' / ' + str(Player.spMax))
 
 def fightingLoop(Player, enemyData, skillsData):
     while True:
@@ -117,11 +171,31 @@ def fightingLoop(Player, enemyData, skillsData):
         reTemp = enemyData['enemies'][randomIndex]
         randomEnemy = enemyProfile(reTemp['enemyName'], reTemp['hpMax'], reTemp['spMax'], reTemp['attack'], reTemp['defense'], reTemp['magic'], reTemp['speed'], reTemp['luck'], reTemp['dSkills'], reTemp['pSSkills'], reTemp['eSSkills'])
 
-        print(randomEnemy.name)
+        print('A ' + randomEnemy.name + ' approaches!')
 
         #Start the fight
 
+        while Player.hp > 0 and randomEnemy.hp > 0:
+            clearScreen()
+            printFightData(Player, randomEnemy)
+            if Player.speed > randomEnemy.speed:
+                print('player turn')
+                playerTurn(Player, randomEnemy, skillsData)
+                if(randomEnemy.hp > 0):
+                    print('enemy turn')
 
+            else:
+                print('enemy turn')
+
+                if Player.hp > 0:
+                    print('player turn')
+
+        print('fight done')
+
+
+        if Player.hp <= 0:
+            print('You have died.  Too bad :(')
+            break
 
         #ask the player if they want to fight again
         pInput = input('Do you want to fight again? (Y/N)')
@@ -193,7 +267,7 @@ if __name__=='__main__':
 
     pInput = input('Are you ready to start a fight? (Y/N)')
 
-    if pInput == 'Y' or pInput == 'y':
+    if pInput.lower() == 'y':
         print('Start the Game!')
         fightingLoop(Player, enemyData, skillsData)
     else:
