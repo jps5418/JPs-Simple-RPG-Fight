@@ -9,6 +9,13 @@
 	],
 	"pSSkills" : [
 		{
+			"skillName" : "guard",
+			"skillDescription" : "guard",
+			"skillCost" : 0,
+			"affectedStat" : "defense",
+			"statChange" : 5
+		},
+		{
 			"skillName" : "Happy Thoughts",
 			"skillDescription" : "Think happy thoughts to boost your attack",
 			"skillCost" : 5,

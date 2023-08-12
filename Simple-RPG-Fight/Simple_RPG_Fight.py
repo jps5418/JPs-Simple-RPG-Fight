@@ -112,8 +112,37 @@ def clearScreen():
     else:
         clear = os.system('clear')
 
+def addBuffToPlayer(Player, skillUsed, skillsData):
+    print('adding buff to player')
+    time.sleep(1)
+    tempBuff = ''
+    for i in skillsData['pSSkills']:
+        if i['skillName'] == skillUsed:
+            tempBuff = buff(i['affectedStat'], i['statChange'])
+            if skillUsed == 'guard':
+                tempBuff.turnsLeft -= 2
+            Player.buffs.append(tempBuff)
+            print(tempBuff.affectedStat + ' stat increased by ' + str(tempBuff.statChange) + '!\n')
+            time.sleep(1)
+            break
+
+    for i in skillsData['eSSkills']:
+        if i['skillName'] == skillUsed:
+            tempBuff = buff(i['affectedStat'], i['statChange'] * -1)
+            Player.buffs.append(tempBuff)
+            print(tempBuff.affectedStat + ' stat decreased by ' + str(tempBuff.statChange) + '!\n')
+            time.sleep(1)
+            break
+    
+
 def playerTurn(Player, Enemy, skillsData):
     
+    for i in Player.buffs:
+        i.turnsLeft -= 1
+        if i.turnsLeft < 1:
+            Player.buffs.remove(i)
+        else:
+            print('' + i.affectedStat + 'buff has ' + str(i.turnsLeft) + ' turns left\n')
 
     while True:
         print('Menu')
@@ -138,12 +167,10 @@ def playerTurn(Player, Enemy, skillsData):
                 print('' + Enemy.name + ' is now at ' + str(Enemy.hp) + ' HP!')
             else:
                 print("Your attack does no damage!")
-            
-            time.sleep(3)
-            input('Press enter to continue')
             break
         elif pInput.lower() == 'guard':
             print('guarding!')
+            addBuffToPlayer(Player, 'guard', skillsData)
             break
         elif pInput.lower() == 'skill':
             print('skills list')
@@ -155,11 +182,14 @@ def playerTurn(Player, Enemy, skillsData):
         else:
             print('Please enter a valid input')
 
+    time.sleep(2)
+    input('Press enter to continue')
     print('\n\nplayer turn done')
 
 def printFightData(Player, Enemy):
     print('' + Enemy.name + '\n\tHP: ' + str(Enemy.hp))
     print('' + Player.name + '\n\tHP: ' + str(Player.hp) + ' / ' + str(Player.hpMax) + '\n\tSP: ' + str(Player.sp) + ' / ' + str(Player.spMax))
+
 
 def fightingLoop(Player, enemyData, skillsData):
     while True:
